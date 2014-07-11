@@ -6,7 +6,7 @@ This lib provides helpers easy to use to manage the remote files.
 
 ## Install
 
-  * Use composer: `composer install nicolab/php-ftp-client`
+  * Use composer: _require_ `nicolab/php-ftp-client`
 
   * Or use GIT clone command: `git clone git@github.com:Nicolab/php-ftp-client.git`
 
