@@ -49,9 +49,9 @@ $ftp->putAll($source_directory, $target_directory, FTP_ASCII);
 $ftp->putAll($source_directory, $target_directory, FTP_BINARY);
 ```
 
-*Note : FTP_ASCII and FTP_BINARY is the predefined PHP internal constant.*
+*Note : FTP_ASCII and FTP_BINARY are predefined PHP internal constants.*
 
-Get the a directory size :
+Get a directory size :
 
 ```php
 // size of the current directory
@@ -83,7 +83,7 @@ $total_dir = $ftp->count('/path/of/directory', 'directory');
 $total_link = $ftp->count('/path/of/directory', 'link');
 ```
 
-List detailed of all files and directories :
+Detailed list of all files and directories :
 
 ```php
 // scan the current directory and returns the details of each item
@@ -164,7 +164,7 @@ $ftp->mkdir('path/of/directory/to/create', true);
 // and more ...
 ```
 
-Get the help information of the remote FTP server :
+Get the help information of remote FTP server :
 
 ```php
 var_dump($ftp->help());
@@ -181,7 +181,7 @@ Result :
 	  5 => string '214 Pure-FTPd - http://pureftpd.org/' (length=36)
 
 
-_Note : The result depend of the FTP server._
+_Note : The result depend of FTP server._
 
 
 ### Extend
