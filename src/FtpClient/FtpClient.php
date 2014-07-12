@@ -95,7 +95,7 @@ class FtpClient implements Countable
     }
 
     /**
-     * Call the FTP method with the wrapper.
+     * Call an internal method or a FTP method handled by the wrapper.
      *
      * Wrap the FTP PHP functions to call as method of FtpClient object.
      * The connection is automaticaly passed to the FTP PHP functions.
@@ -108,18 +108,6 @@ class FtpClient implements Countable
     public function __call($method, array $arguments)
     {
         return $this->ftp->__call($method, $arguments);
-    }
-
-    /**
-     * Set the wrapper which forward the PHP FTP functions to use in FtpClient instance.
-     * @param  FtpWrapper $wrapper
-     * @return FtpClient
-     */
-    public function setWrapper(FtpWrapper $wrapper)
-    {
-        $this->ftp = $wrapper;
-
-        return $this;
     }
 
     /**
@@ -837,5 +825,17 @@ class FtpClient implements Countable
             default:
                 return 'unknown';
         }
+    }
+
+    /**
+     * Set the wrapper which forward the PHP FTP functions to use in FtpClient instance.
+     * @param  FtpWrapper $wrapper
+     * @return FtpClient
+     */
+    protected function setWrapper(FtpWrapper $wrapper)
+    {
+        $this->ftp = $wrapper;
+
+        return $this;
     }
 }
