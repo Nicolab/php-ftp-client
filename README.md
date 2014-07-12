@@ -18,9 +18,9 @@ This lib provides helpers easy to use to manage the remote files.
 Connect to a server FTP :
 
 ```php
-	$ftp = new \FtpClient\FtpClient();
-	$ftp->connect($host);
-	$ftp->login($login, $password);
+$ftp = new \FtpClient\FtpClient();
+$ftp->connect($host);
+$ftp->login($login, $password);
 ```
 
 OR
@@ -28,9 +28,9 @@ OR
 Connect to a server FTP via SSL (on port 22 or other port) :
 
 ```php
-	$ftp = new \FtpClient\FtpClient();
-	$ftp->connect($host, true, 22);
-	$ftp->login($login, $password);
+$ftp = new \FtpClient\FtpClient();
+$ftp->connect($host, true, 22);
+$ftp->login($login, $password);
 ```
 
 
@@ -39,15 +39,14 @@ Connect to a server FTP via SSL (on port 22 or other port) :
 Upload all files and all directories is easy :
 
 ```php
-	// upload with the ASCII mode
-	$ftp->putAll($source_directory, $target_directory);
+// upload with the ASCII mode
+$ftp->putAll($source_directory, $target_directory);
 
-	// Is equal to
-	$ftp->putAll($source_directory, $target_directory, FTP_ASCII);
+// Is equal to
+$ftp->putAll($source_directory, $target_directory, FTP_ASCII);
 
-	// or upload with the binary mode
-	$ftp->putAll($source_directory, $target_directory, FTP_BINARY);
-
+// or upload with the binary mode
+$ftp->putAll($source_directory, $target_directory, FTP_BINARY);
 ```
 
 *Note : FTP_ASCII and FTP_BINARY is the predefined PHP internal constant.*
@@ -55,47 +54,43 @@ Upload all files and all directories is easy :
 Get the a directory size :
 
 ```php
+// size of the current directory
+$size = $ftp->dirSize();
 
-	// size of the current directory
-	$size = $ftp->dirSize();
-
-	// size of a given directory
-	$size = $ftp->dirSize('/path/of/directory');
-
+// size of a given directory
+$size = $ftp->dirSize('/path/of/directory');
 ```
 
 Count the items in a directory :
 
 ```php
+// count in the current directory
+$total = $ftp->count();
 
-	// count in the current directory
-	$total = $ftp->count();
+// count in a given directory
+$total = $ftp->count('/path/of/directory');
 
-	// count in a given directory
-	$total = $ftp->count('/path/of/directory');
+// count only the "files" in the current directory
+$total_file = $ftp->count('.', 'file');
 
-	// count only the "files" in the current directory
-	$total_file = $ftp->count('.', 'file');
+// count only the "files" in a given directory
+$total_file = $ftp->count('/path/of/directory', 'file');
 
-	// count only the "files" in a given directory
-	$total_file = $ftp->count('/path/of/directory', 'file');
+// count only the "directories" in a given directory
+$total_dir = $ftp->count('/path/of/directory', 'directory');
 
-	// count only the "directories" in a given directory
-	$total_dir = $ftp->count('/path/of/directory', 'directory');
-
-	// count only the "symbolic links" in a given directory
-	$total_link = $ftp->count('/path/of/directory', 'link');
-
+// count only the "symbolic links" in a given directory
+$total_link = $ftp->count('/path/of/directory', 'link');
 ```
 
 List detailed of all files and directories :
 
 ```php
-	// scan the current directory and returns the details of each item
-	$items = $ftp->scanDir();
+// scan the current directory and returns the details of each item
+$items = $ftp->scanDir();
 
-	// scan the current directory (recursive) and returns the details of each item
-	var_dump($ftp->scanDir('.', true));
+// scan the current directory (recursive) and returns the details of each item
+var_dump($ftp->scanDir('.', true));
 ```
 
 Result:
@@ -144,37 +139,35 @@ Result:
 All FTP PHP functions are supported and some improved :
 
 ```php
+// Requests execution of a command on the FTP server
+$ftp->exec($command);
 
-	// Requests execution of a command on the FTP server
-	$ftp->exec($command);
+// Turns passive mode on or off
+$ftp->pasv(true);
 
-	// Turns passive mode on or off
-	$ftp->pasv(true);
+// Set permissions on a file via FTP
+$ftp->chmod('0777', 'file.php');
 
-	// Set permissions on a file via FTP
-	$ftp->chmod('0777', 'file.php');
+// Removes a directory
+$ftp->rmdir('path/of/directory/to/remove');
 
-	// Removes a directory
-	$ftp->rmdir('path/of/directory/to/remove');
+// Removes a directory (recursive)
+$ftp->rmdir('path/of/directory/to/remove', true);
 
-	// Removes a directory (recursive)
-	$ftp->rmdir('path/of/directory/to/remove', true);
+// Creates a directory
+$ftp->mkdir('path/of/directory/to/create');
 
-	// Creates a directory
-	$ftp->mkdir('path/of/directory/to/create');
+// Creates a directory (recursive),
+// creates automaticaly the sub directory if not exist
+$ftp->mkdir('path/of/directory/to/create', true);
 
-	// Creates a directory (recursive),
-	// creates automaticaly the sub directory if not exist
-	$ftp->mkdir('path/of/directory/to/create', true);
-
-	// and more ...
-
+// and more ...
 ```
 
 Get the help information of the remote FTP server :
 
 ```php
-	var_dump($ftp->help());
+var_dump($ftp->help());
 ```
 
 Result :
@@ -189,6 +182,49 @@ Result :
 
 
 _Note : The result depend of the FTP server._
+
+
+### Extend
+
+Create your custom `FtpClient`.
+
+```php
+// MyFtpClient.php
+
+/**
+ * My custom FTP Client
+ * @inheritDoc
+ */
+class MyFtpClient extends \FtpClient\FtpClient {
+
+  public function removeByTime($path, $timestamp) {
+      // your code here
+  }
+
+  public function search($regex) {
+      // your code here
+  }
+}
+```
+
+```php
+// example.php
+$ftp = new MyFtpClient();
+$ftp->connect($host);
+$ftp->login($login, $password);
+
+// remove the old files
+$ftp->removeByTime('/www/mysite.com/demo', time() - 86400));
+
+// search PNG files
+$ftp->search('/(.*)\.png$/i');
+```
+
+
+## API doc
+
+See the [code source](https://github.com/Nicolab/php-ftp-client/tree/master/src/FtpClient) for more details.
+It is full documented :blue_book:
 
 
 ## Testing
