@@ -43,10 +43,10 @@ Upload all files and all directories is easy :
 $ftp->putAll($source_directory, $target_directory);
 
 // Is equal to
-$ftp->putAll($source_directory, $target_directory, FTP_ASCII);
-
-// or upload with the binary mode
 $ftp->putAll($source_directory, $target_directory, FTP_BINARY);
+
+// or upload with the ASCII mode
+$ftp->putAll($source_directory, $target_directory, FTP_ASCII);
 ```
 
 *Note : FTP_ASCII and FTP_BINARY are predefined PHP internal constants.*
