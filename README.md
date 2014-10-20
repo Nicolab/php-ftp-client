@@ -39,7 +39,7 @@ $ftp->login($login, $password);
 Upload all files and all directories is easy :
 
 ```php
-// upload with the ASCII mode
+// upload with the binary mode
 $ftp->putAll($source_directory, $target_directory);
 
 // Is equal to
