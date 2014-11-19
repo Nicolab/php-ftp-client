@@ -33,13 +33,15 @@ $ftp->connect($host, true, 22);
 $ftp->login($login, $password);
 ```
 
+Note: The connection is implicitly closed at the end of script execution (when the object is destroyed). Therefore it is unnecessary to call `$ftp->close()`, except for an explicit re-connection.
+
 
 ### Usage
 
 Upload all files and all directories is easy :
 
 ```php
-// upload with the binary mode
+// upload with the BINARY mode
 $ftp->putAll($source_directory, $target_directory);
 
 // Is equal to
@@ -234,7 +236,7 @@ Tested with "atoum" unit testing framework.
 
 ## License
 
-[MIT](https://github.com/Nicolab/php-ftp-client/blob/master/LICENSE)
+[MIT](https://github.com/Nicolab/php-ftp-client/blob/master/LICENSE) c) 2014, Nicolas Tallefourtane.
 
 
 ## Author
