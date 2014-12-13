@@ -653,7 +653,6 @@ class FtpClient implements Countable
         if (false == $recursive) {
 
             foreach ($list as $path => $item) {
-
                 $chunks = preg_split("/\s+/", $item);
 
                 // if not "name"
@@ -663,8 +662,12 @@ class FtpClient implements Countable
 
                 $path = $directory.'/'.$chunks[8];
 
-                for ($i = 9; $i < count($chunks); $i++) {
-                    $path .= ' ' . $chunks[$i];
+                if(isset($chunks[9])) {
+                    $nbChunks = count($chunks);
+
+                    for ($i = 9; $i < $nbChunks; $i++) {
+                        $path .= ' '.$chunks[$i];
+                    }
                 }
 
 
@@ -704,9 +707,13 @@ class FtpClient implements Countable
             }
 
             $path = $directory.'/'.$chunks[8];
-            
-            for ($i = 9; $i < count($chunks); $i++) {
-                $path .= ' ' . $chunks[$i];
+
+            if(isset($chunks[9])) {
+                $nbChunks = count($chunks);
+
+                for ($i = 9; $i < $nbChunks; $i++) {
+                    $path .= ' '.$chunks[$i];
+                }
             }
 
             if (substr($path, 0, 2) == './') {
@@ -716,7 +723,6 @@ class FtpClient implements Countable
             $items[$this->rawToType($item).'#'.$path] = $item;
 
             if ($item[0] == 'd') {
-
                 $sublist = $this->rawlist($path, true);
 
                 foreach ($sublist as $subpath => $subitem) {
