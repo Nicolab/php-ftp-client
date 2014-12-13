@@ -10,7 +10,7 @@ This lib provides helpers easy to use to manage the remote files.
 
   * Or use GIT clone command: `git clone git@github.com:Nicolab/php-ftp-client.git`
 
-  * Or download the library, configure your autoloader or include the 3 files of `nicolab/php-ftp-client/src/FtpClient` directory.
+  * Or download the library, configure your autoloader or include the 3 files of `php-ftp-client/src/FtpClient` directory.
 
 
 ## Getting Started
