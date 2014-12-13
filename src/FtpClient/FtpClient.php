@@ -663,6 +663,11 @@ class FtpClient implements Countable
 
                 $path = $directory.'/'.$chunks[8];
 
+                for ($i = 9; $i < count($chunks); $i++) {
+                    $path .= ' ' . $chunks[$i];
+                }
+
+
                 if (substr($path, 0, 2) == './') {
                     $path = substr($path, 2);
                 }
@@ -699,6 +704,10 @@ class FtpClient implements Countable
             }
 
             $path = $directory.'/'.$chunks[8];
+            
+            for ($i = 9; $i < count($chunks); $i++) {
+                $path .= ' ' . $chunks[$i];
+            }
 
             if (substr($path, 0, 2) == './') {
                 $path = substr($path, 2);
