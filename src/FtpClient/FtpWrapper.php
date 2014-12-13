@@ -81,9 +81,7 @@ class FtpWrapper
         $function = 'ftp_' . $function;
 
         if (function_exists($function)) {
-
             array_unshift($arguments, $this->conn);
-
             return call_user_func_array($function, $arguments);
         }
 
