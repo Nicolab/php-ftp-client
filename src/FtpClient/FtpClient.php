@@ -263,6 +263,11 @@ class FtpClient implements Countable
 
         $files = $this->ftp->nlist($directory);
 
+        foreach ($files as $k => $file) {
+            $pieces = explode(DIRECTORY_SEPARATOR, $file);
+            $files[$k] = end($pieces);
+        }
+
         if ($files === false) {
             throw new FtpException('Unable to list directory');
         }
