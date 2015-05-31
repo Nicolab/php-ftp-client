@@ -11,10 +11,7 @@
  */
 namespace FtpClient;
 
-use
-    \Closure,
-    \Countable
-;
+use \Countable;
 
 /**
  * The FTP and SSL-FTP client for PHP.
@@ -23,7 +20,6 @@ use
  * @method bool cdup() cdup() Changes to the parent directory
  * @method bool chdir() chdir(string $directory) Changes the current directory on a FTP server
  * @method int chmod() chmod(int $mode, string $filename) Set permissions on a file via FTP
- * @method bool close() close() Closes an FTP connection
  * @method bool delete() delete(string $path) Deletes a file on the FTP server
  * @method bool exec() exec(string $command) Requests execution of a command on the FTP server
  * @method bool fget() fget(resource $handle, string $remote_file, int $mode, int $resumepos = 0) Downloads a file from the FTP server and saves to an open file
@@ -41,7 +37,6 @@ use
  * @method string pwd() pwd() Returns the current directory name
  * @method bool quit() quit() Closes an FTP connection
  * @method array raw() raw(string $command) Sends an arbitrary command to an FTP server
- * @method array rawlist() rawlist(string $directory, bool $recursive = false) Returns a detailed list of files in the given directory
  * @method bool rename() rename(string $oldname, string $newname) Renames a file or a directory on the FTP server
  * @method bool set_option() set_option(int $option, mixed $value) Set miscellaneous runtime FTP options
  * @method bool site() site(string $command) Sends a SITE command to the server
@@ -62,7 +57,7 @@ class FtpClient implements Countable
     /**
      * PHP FTP functions wrapper
      *
-     * @var Functions
+     * @var FtpWrapper
      */
     private $ftp;
 
@@ -100,7 +95,7 @@ class FtpClient implements Countable
      * Wrap the FTP PHP functions to call as method of FtpClient object.
      * The connection is automaticaly passed to the FTP PHP functions.
      *
-     * @param  string       $function
+     * @param  string       $method
      * @param  array        $arguments
      * @return mixed
      * @throws FtpException When the function is not valid
@@ -165,6 +160,14 @@ class FtpClient implements Countable
         return $this;
     }
 
+	public function close()
+	{
+		if ($this->conn) {
+			$this->ftp->close();
+			$this->conn = null;
+		}
+	}
+
     /**
      * Get the connection with the server
      *
@@ -185,14 +188,15 @@ class FtpClient implements Countable
         return $this->ftp;
     }
 
-    /**
-     * Logs in to an FTP connection
-     *
-     * @param string $username
-     * @param string $password
-     *
-     * @return FTPClient If the login is incorrect
-     */
+	/**
+	 * Logs in to an FTP connection
+	 *
+	 * @param string $username
+	 * @param string $password
+	 *
+	 * @throws FtpException
+	 * @return FtpClient If the login is incorrect
+	 */
     public function login($username = 'anonymous', $password = '')
     {
         $result = $this->ftp->login($username, $password);
@@ -209,6 +213,7 @@ class FtpClient implements Countable
      * Return -1 on error
      *
      * @param string $remoteFile
+     * @param string|null $format
      *
      * @return int
      */
@@ -223,11 +228,12 @@ class FtpClient implements Countable
         return $time;
     }
 
-    /**
-     * Changes to the parent directory
-     *
-     * @return FTPClient
-     */
+	/**
+	 * Changes to the parent directory
+	 *
+	 * @throws FtpException
+	 * @return FtpClient
+	 */
     public function up()
     {
         $result = @$this->ftp->cdup();
@@ -441,11 +447,14 @@ class FtpClient implements Countable
         }
     }
 
-    /**
-     * Check if a directory exist.
-     * @param $directory
-     * @return bool
-     */
+	/**
+	 * Check if a directory exist.
+	 *
+	 * @param string $directory
+	 *
+	 * @throws FtpException
+	 * @return bool
+	 */
     public function isDir($directory)
     {
         $pwd = $this->ftp->pwd();
@@ -796,12 +805,15 @@ class FtpClient implements Countable
         return $items;
     }
 
-    /**
-     * Convert raw info (drwx---r-x ...) to type (file, directory, link, unknown).
-     * Only the first char is used for resolving.
-     * @param  string $permission Example : drwx---r-x
-     * @return string The file type (file, directory, link, unknown)
-     */
+	/**
+	 * Convert raw info (drwx---r-x ...) to type (file, directory, link, unknown).
+	 * Only the first char is used for resolving.
+	 *
+	 * @param  string $permission Example : drwx---r-x
+	 *
+	 * @throws FtpException
+	 * @return string The file type (file, directory, link, unknown)
+	 */
     public function rawToType($permission)
     {
         if (!is_string($permission)) {
@@ -837,7 +849,7 @@ class FtpClient implements Countable
     protected function setWrapper(FtpWrapper $wrapper)
     {
         $this->ftp = $wrapper;
-        
+
         return $this;
     }
 }
