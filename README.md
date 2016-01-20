@@ -225,8 +225,8 @@ $ftp->search('/(.*)\.png$/i');
 
 ## API doc
 
-See the [code source](https://github.com/Nicolab/php-ftp-client/tree/master/src/FtpClient) for more details.
-It is full documented :blue_book:
+See the [source code](https://github.com/Nicolab/php-ftp-client/tree/master/src/FtpClient) for more details.
+It is fully documented :blue_book:
 
 
 ## Testing
