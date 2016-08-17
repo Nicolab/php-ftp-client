@@ -638,6 +638,10 @@ class FtpClient implements Countable
         $list  = $this->ftp->rawlist($directory);
         $items = array();
 
+        if (!$list) {
+            return $items;
+        }
+
         if (false == $recursive) {
 
             foreach ($list as $path => $item) {
@@ -650,7 +654,7 @@ class FtpClient implements Countable
 
                 $path = $directory.'/'.$chunks[8];
 
-                if(isset($chunks[9])) {
+                if (isset($chunks[9])) {
                     $nbChunks = count($chunks);
 
                     for ($i = 9; $i < $nbChunks; $i++) {
@@ -675,7 +679,7 @@ class FtpClient implements Countable
 
             $len = strlen($item);
 
-            if(!$len
+            if (!$len
 
             // "."
             || ($item[$len-1] == '.' && $item[$len-2] == ' '
@@ -696,7 +700,7 @@ class FtpClient implements Countable
 
             $path = $directory.'/'.$chunks[8];
 
-            if(isset($chunks[9])) {
+            if (isset($chunks[9])) {
                 $nbChunks = count($chunks);
 
                 for ($i = 9; $i < $nbChunks; $i++) {
