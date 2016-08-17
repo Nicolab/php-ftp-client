@@ -61,7 +61,7 @@ class FtpWrapper
     /**
      * Constructor.
      *
-     * @param ressource &$connection The FTP (or SSL-FTP) connection (takes by reference).
+     * @param resource &$connection The FTP (or SSL-FTP) connection (takes by reference).
      */
     public function __construct(&$connection)
     {
