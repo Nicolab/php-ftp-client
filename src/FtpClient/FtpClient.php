@@ -594,7 +594,7 @@ class FtpClient implements Countable
                 // do the following if it is a directory
                 if (is_dir($source_directory.'/'.$file)) {
 
-                    if (!@$this->ftp->chdir($target_directory.'/'.$file)) {
+                    if (!$this->isDir($target_directory.'/'.$file)) {
 
                         // create directories that do not yet exist
                         $this->ftp->mkdir($target_directory.'/'.$file);
