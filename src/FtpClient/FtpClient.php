@@ -764,7 +764,7 @@ class FtpClient implements Countable
         $path  = '';
 
         foreach ($rawlist as $key => $child) {
-            $chunks = preg_split("/\s+/", $child);
+            $chunks = preg_split("/\s+/", $child, 9);
 
             if (isset($chunks[8]) && ($chunks[8] == '.' or $chunks[8] == '..')) {
                 continue;
