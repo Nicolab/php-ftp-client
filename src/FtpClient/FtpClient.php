@@ -372,6 +372,8 @@ class FtpClient implements Countable
 
         foreach ($parts as $part) {
 
+            if($part == "") continue;
+
             if (!@$this->ftp->chdir($part)) {
                 $result = $this->ftp->mkdir($part);
                 $this->ftp->chdir($part);
