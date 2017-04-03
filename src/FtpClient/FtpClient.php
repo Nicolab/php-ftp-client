@@ -280,6 +280,11 @@ class FtpClient implements Countable
             throw new FtpException('Unable to list directory');
         }
 
+        foreach ($files as $k => $file) {
+            $pieces = explode(DIRECTORY_SEPARATOR, $file);
+            $files[$k] = end($pieces);
+        }
+
         $result  = array();
         $dir_len = strlen($directory);
 
