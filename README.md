@@ -150,7 +150,7 @@ $ftp->exec($command);
 $ftp->pasv(true);
 
 // Set permissions on a file via FTP
-$ftp->chmod('0777', 'file.php');
+$ftp->chmod(0777, 'file.php');
 
 // Removes a directory
 $ftp->rmdir('path/of/directory/to/remove');
