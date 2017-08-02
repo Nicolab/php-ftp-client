@@ -63,7 +63,7 @@ class FtpClient implements Countable
 
     /**
      * Constructor.
-     * 
+     *
      * @param  resource|null $connection
      * @throws FtpException  If FTP extension is not loaded.
      */
@@ -128,7 +128,7 @@ class FtpClient implements Countable
 
     /**
      * Get the help information of the remote FTP server.
-     * 
+     *
      * @return array
      */
     public function help()
@@ -350,7 +350,7 @@ class FtpClient implements Countable
 
     /**
      * Creates a directory.
-     * 
+     *
      * @see FtpClient::rmdir()
      * @see FtpClient::remove()
      * @see FtpClient::put()
@@ -388,7 +388,7 @@ class FtpClient implements Countable
 
     /**
      * Remove a directory.
-     * 
+     *
      * @see FtpClient::mkdir()
      * @see FtpClient::cleanDir()
      * @see FtpClient::remove()
@@ -415,7 +415,7 @@ class FtpClient implements Countable
 
     /**
      * Empty directory.
-     * 
+     *
      * @see FtpClient::remove()
      * @see FtpClient::delete()
      * @see FtpClient::rmdir()
@@ -439,7 +439,7 @@ class FtpClient implements Countable
 
     /**
      * Remove a file or a directory.
-     * 
+     *
      * @see FtpClient::rmdir()
      * @see FtpClient::cleanDir()
      * @see FtpClient::delete()
@@ -488,7 +488,7 @@ class FtpClient implements Countable
 
     /**
      * Check if a directory is empty.
-     * 
+     *
      * @param  string $directory
      * @return bool
      */
@@ -499,7 +499,7 @@ class FtpClient implements Countable
 
     /**
      * Scan a directory and returns the details of each item.
-     * 
+     *
      * @see FtpClient::nlist()
      * @see FtpClient::rawlist()
      * @see FtpClient::parseRawList()
@@ -534,7 +534,7 @@ class FtpClient implements Countable
 
     /**
      * Count the items (file, directory, link, unknown).
-     * 
+     *
      * @param  string      $directory The directory, by default is the current directory.
      * @param  string|null $type      The type of item to count (file, directory, link, unknown)
      * @param  bool        $recursive true by default
@@ -553,6 +553,26 @@ class FtpClient implements Countable
         }
 
         return $count;
+    }
+
+    /**
+     * Downloads a file from the FTP server into a string
+     *
+     * @param  string $remote_file
+     * @param  int    $mode
+     * @param  int    $resumepos
+     * @return string|null
+     */
+    public function getContent($remote_file, $mode = FTP_BINARY, $resumepos = 0)
+    {
+        $handle = fopen('php://temp', 'r+');
+
+        if ($this->fget($handle, $remote_file, $mode, $resumepos)) {
+            rewind($handle);
+            return stream_get_contents($handle);
+        }
+
+        return null;
     }
 
     /**
@@ -601,7 +621,7 @@ class FtpClient implements Countable
 
     /**
      * Upload files.
-     * 
+     *
      * @param  string    $source_directory
      * @param  string    $target_directory
      * @param  int       $mode
@@ -647,7 +667,7 @@ class FtpClient implements Countable
 
     /**
      * Returns a detailed list of files in the given directory.
-     * 
+     *
      * @see FtpClient::nlist()
      * @see FtpClient::scanDir()
      * @see FtpClient::dirSize()
@@ -754,7 +774,7 @@ class FtpClient implements Countable
 
     /**
      * Parse raw list.
-     * 
+     *
      * @see FtpClient::rawlist()
      * @see FtpClient::scanDir()
      * @see FtpClient::dirSize()
@@ -864,7 +884,7 @@ class FtpClient implements Countable
 
     /**
      * Set the wrapper which forward the PHP FTP functions to use in FtpClient instance.
-     * 
+     *
      * @param  FtpWrapper $wrapper
      * @return FtpClient
      */
