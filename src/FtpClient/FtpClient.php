@@ -120,7 +120,7 @@ class FtpClient implements Countable
             ini_set('memory_limit', $memory);
         }
 
-        ignore_user_abort(true);
+        ignore_user_abort($ignore_user_abort);
         set_time_limit($time_limit);
 
         return $this;
