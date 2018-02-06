@@ -31,7 +31,7 @@ Connect to a server FTP via SSL (on port 22 or other port) :
 
 ```php
 $ftp = new \FtpClient\FtpClient();
-$ftp->connect($host, true, 22);
+$ftp->connect($host, true, 21);
 $ftp->login($login, $password);
 ```
 
