@@ -27,11 +27,11 @@ $ftp->login($login, $password);
 
 OR
 
-Connect to a server FTP via SSL (on port 22 or other port) :
+Connect to a server FTP via SSL (on port 990 or another port) :
 
 ```php
 $ftp = new \FtpClient\FtpClient();
-$ftp->connect($host, true, 22);
+$ftp->connect($host, true, 990);
 $ftp->login($login, $password);
 ```
 
