@@ -294,9 +294,7 @@ class FtpClient implements Countable
         }
 
         if (!$recursive) {
-            foreach ($files as $file) {
-                $result[] = $directory.'/'.$file;
-            }
+            $result = $files;
 
             // working with the reference (behavior of several PHP sorting functions)
             $filter($result);
