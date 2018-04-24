@@ -306,7 +306,6 @@ class FtpClient implements Countable
 
         // utils for recursion
         $flatten = function (array $arr) use (&$flatten) {
-
             $flat = [];
 
             foreach ($arr as $k => $v) {
@@ -373,7 +372,7 @@ class FtpClient implements Countable
         foreach ($parts as $part) {
             if ($part == '') {
                 continue;
-	    	}
+            }
 
             if (!@$this->ftp->chdir($part)) {
                 $result = $this->ftp->mkdir($part);
@@ -425,7 +424,7 @@ class FtpClient implements Countable
      */
     public function cleanDir($directory)
     {
-        if(!$files = $this->nlist($directory)) {
+        if (!$files = $this->nlist($directory)) {
             return $this->isEmpty($directory);
         }
 
@@ -670,7 +669,6 @@ class FtpClient implements Countable
         }
 
         if (false == $recursive) {
-
             foreach ($list as $path => $item) {
                 $chunks = preg_split("/\s+/", $item);
 
@@ -783,10 +781,8 @@ class FtpClient implements Countable
                 continue;
             }
 		
-	    /**
-            * Prepare for filename that has space
-            */
-            $nameSlices = array_slice( $chunks, 8 );
+            // Prepare for filename that has space
+            $nameSlices = array_slice($chunks, 8);
 
             $item = [
                 'permissions' => $chunks[0],
@@ -797,7 +793,7 @@ class FtpClient implements Countable
                 'month'       => $chunks[5],
                 'day'         => $chunks[6],
                 'time'        => $chunks[7],
-                'name'        => implode(" ", $nameSlices ),
+                'name'        => implode(' ', $nameSlices),
                 'type'        => $this->rawToType($chunks[0]),
             ];
 
@@ -832,15 +828,15 @@ class FtpClient implements Countable
         return $items;
     }
 
-	/**
-	 * Convert raw info (drwx---r-x ...) to type (file, directory, link, unknown).
-	 * Only the first char is used for resolving.
-	 *
-	 * @param  string $permission Example : drwx---r-x
-	 *
-	 * @return string The file type (file, directory, link, unknown)
-	 * @throws FtpException
-	 */
+    /**
+     * Convert raw info (drwx---r-x ...) to type (file, directory, link, unknown).
+     * Only the first char is used for resolving.
+     *
+     * @param  string $permission Example : drwx---r-x
+     *
+     * @return string The file type (file, directory, link, unknown)
+     * @throws FtpException
+     */
     public function rawToType($permission)
     {
         if (!is_string($permission)) {
