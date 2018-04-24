@@ -782,6 +782,11 @@ class FtpClient implements Countable
 
                 continue;
             }
+		
+	    /**
+            * Prepare for filename that has space
+            */
+            $nameSlices = array_slice( $chunks, 8 );
 
             $item = [
                 'permissions' => $chunks[0],
@@ -792,7 +797,7 @@ class FtpClient implements Countable
                 'month'       => $chunks[5],
                 'day'         => $chunks[6],
                 'time'        => $chunks[7],
-                'name'        => $chunks[8],
+                'name'        => implode(" ", $nameSlices ),
                 'type'        => $this->rawToType($chunks[0]),
             ];
 
