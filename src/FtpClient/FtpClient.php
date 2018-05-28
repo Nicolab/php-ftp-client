@@ -660,8 +660,16 @@ class FtpClient implements Countable
         if (!$this->isDir($directory)) {
             throw new FtpException('"'.$directory.'" is not a directory.');
         }
-
-        $list  = $this->ftp->rawlist($directory);
+        
+        if (strpos($directory," ") > 0) {
+            $ftproot = $this->ftp->pwd();
+            $this->ftp->chdir($directory);
+            $list  = $this->ftp->rawlist("");
+            $this->ftp->chdir($ftproot);
+        } else {
+            $list  = $this->ftp->rawlist($directory);
+        }
+        
         $items = array();
 
         if (!$list) {
