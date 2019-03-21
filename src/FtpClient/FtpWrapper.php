@@ -82,7 +82,7 @@ class FtpWrapper
 
         if (function_exists($function)) {
             array_unshift($arguments, $this->conn);
-            return call_user_func_array($function, $arguments);
+            return @call_user_func_array($function, $arguments);
         }
 
         throw new FtpException("{$function} is not a valid FTP function");
@@ -98,7 +98,7 @@ class FtpWrapper
      */
     public function connect($host, $port = 21, $timeout = 90)
     {
-        return ftp_connect($host, $port, $timeout);
+        return @ftp_connect($host, $port, $timeout);
     }
 
     /**
@@ -110,6 +110,6 @@ class FtpWrapper
      */
     public function ssl_connect($host, $port = 21, $timeout = 90)
     {
-        return ftp_ssl_connect($host, $port, $timeout);
+        return @ftp_ssl_connect($host, $port, $timeout);
     }
 }
