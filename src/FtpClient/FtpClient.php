@@ -150,9 +150,9 @@ class FtpClient implements Countable
     public function connect($host, $ssl = false, $port = 21, $timeout = 90)
     {
         if ($ssl) {
-            $this->conn = @$this->ftp->ssl_connect($host, $port, $timeout);
+            $this->conn = $this->ftp->ssl_connect($host, $port, $timeout);
         } else {
-            $this->conn = @$this->ftp->connect($host, $port, $timeout);
+            $this->conn = $this->ftp->connect($host, $port, $timeout);
         }
 
         if (!$this->conn) {
@@ -243,7 +243,7 @@ class FtpClient implements Countable
      */
     public function up()
     {
-        $result = @$this->ftp->cdup();
+        $result = $this->ftp->cdup();
 
         if ($result === false) {
             throw new FtpException('Unable to get parent folder');
@@ -372,7 +372,7 @@ class FtpClient implements Countable
                 continue;
             }
 
-            if (!@$this->ftp->chdir($part)) {
+            if (!$this->ftp->chdir($part)) {
                 $result = $this->ftp->mkdir($part);
                 $this->ftp->chdir($part);
             }
@@ -447,8 +447,8 @@ class FtpClient implements Countable
     public function remove($path, $recursive = false)
     {
         try {
-            if (@$this->ftp->delete($path)
-            or ($this->isDir($path) and @$this->rmdir($path, $recursive))) {
+            if ($this->ftp->delete($path)
+            or ($this->isDir($path) and $this->rmdir($path, $recursive))) {
                 return true;
             }
 
@@ -473,7 +473,7 @@ class FtpClient implements Countable
             throw new FtpException('Unable to resolve the current directory');
         }
 
-        if (@$this->ftp->chdir($directory)) {
+        if ($this->ftp->chdir($directory)) {
             $this->ftp->chdir($pwd);
             return true;
         }
