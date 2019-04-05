@@ -650,35 +650,37 @@ class FtpClient implements Countable
      *
      * @param  string $source_directory The remote directory
      * @param  string $target_directory The local directory
+     * @param  int    $mode
      * @return FtpClient
      */
-    public function getAll($source_directory, $target_directory)
+    public function getAll($source_directory, $target_directory, $mode = FTP_BINARY)
     {
-
         if ($source_directory != ".") { 
             if ($this->ftp->chdir($source_directory) == false) { 
                 throw new FtpException("Unable to change directory: ".$source_directory);
-            } 
-            if (!(is_dir($source_directory))) 
-                mkdir($source_directory); 
+            }
+
+            if (!(is_dir($source_directory))) {
+                mkdir($source_directory);
+	    }
+
             chdir($source_directory); 
         } 
 
-        $contents = $this->ftp->nlist("."); 
+        $contents = $this->ftp->nlist(".");
+
         foreach ($contents as $file) { 
+            if ($file == '.' || $file == '..') {
+                continue;
+	    }
 
-            if ($file == '.' || $file == '..') 
-                continue; 
-
-            $this->ftp->get($target_directory."/".$file, $file, FTP_BINARY); 
-            
+            $this->ftp->get($target_directory."/".$file, $file, $mode);
         }
 
         $this->ftp->chdir(".."); 
         chdir (".."); 
 
         return $this;
-        
     }
 
     /**
