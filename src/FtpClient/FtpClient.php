@@ -555,6 +555,26 @@ class FtpClient implements Countable
     }
 
     /**
+     * Downloads a file from the FTP server into a string
+     *
+     * @param  string $remote_file
+     * @param  int    $mode
+     * @param  int    $resumepos
+     * @return string|null
+     */
+    public function getContent($remote_file, $mode = FTP_BINARY, $resumepos = 0)
+    {
+        $handle = fopen('php://temp', 'r+');
+
+        if ($this->fget($handle, $remote_file, $mode, $resumepos)) {
+            rewind($handle);
+            return stream_get_contents($handle);
+        }
+
+        return null;
+    }
+
+    /**
      * Uploads a file to the server from a string.
      *
      * @param  string       $remote_file
