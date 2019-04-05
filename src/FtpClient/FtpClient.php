@@ -144,7 +144,7 @@ class FtpClient implements Countable
      * @param int    $port
      * @param int    $timeout
      *
-     * @return FTPClient
+     * @return FtpClient
      * @throws FtpException If unable to connect
      */
     public function connect($host, $ssl = false, $port = 21, $timeout = 90)
