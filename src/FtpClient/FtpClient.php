@@ -339,7 +339,6 @@ class FtpClient implements Countable
         }
 
         $result = array_unique($result);
-
         $filter($result);
 
         return $result;
@@ -372,7 +371,7 @@ class FtpClient implements Countable
                 continue;
             }
 
-            if (!$this->ftp->chdir($part)) {
+            if (!@$this->ftp->chdir($part)) {
                 $result = $this->ftp->mkdir($part);
                 $this->ftp->chdir($part);
             }
@@ -447,7 +446,7 @@ class FtpClient implements Countable
     public function remove($path, $recursive = false)
     {
         try {
-            if ($this->ftp->delete($path)
+            if (@$this->ftp->delete($path)
             or ($this->isDir($path) and $this->rmdir($path, $recursive))) {
                 return true;
             }
@@ -473,7 +472,7 @@ class FtpClient implements Countable
             throw new FtpException('Unable to resolve the current directory');
         }
 
-        if ($this->ftp->chdir($directory)) {
+        if (@$this->ftp->chdir($directory)) {
             $this->ftp->chdir($pwd);
             return true;
         }
@@ -695,7 +694,7 @@ class FtpClient implements Countable
         }
 
         $this->ftp->chdir(".."); 
-        chdir (".."); 
+        chdir(".."); 
 
         return $this;
     }
@@ -717,7 +716,7 @@ class FtpClient implements Countable
             throw new FtpException('"'.$directory.'" is not a directory.');
         }
         
-        if (strpos($directory," ") > 0) {
+        if (strpos($directory, " ") > 0) {
             $ftproot = $this->ftp->pwd();
             $this->ftp->chdir($directory);
             $list  = $this->ftp->rawlist("");
@@ -774,7 +773,7 @@ class FtpClient implements Countable
 
             // ".."
             or $item[$len-1] == '.' && $item[$len-2] == '.' && $item[$len-3] == ' ')
-            ){
+            ) {
 
                 continue;
             }
@@ -874,16 +873,13 @@ class FtpClient implements Countable
                     .implode(' ', $chunks);
 
                 if ($item['type'] == 'link') {
-
                     // get the first part of 'link#the-link.ext -> /path/of/the/source.ext'
                     $exp = explode(' ->', $key);
                     $key = rtrim($exp[0]);
                 }
 
                 $items[$key] = $item;
-
             } else {
-
                 // the key is the path, behavior of FtpClient::rawlist() method()
                 $items[$key] = $item;
             }
