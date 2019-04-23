@@ -861,7 +861,7 @@ class FtpClient implements Countable
                 'type'        => $this->rawToType($chunks[0]),
             ];
 
-            if ($item['type'] == 'link') {
+            if ($item['type'] == 'link' && isset($chunks[10])) {
                 $item['target'] = $chunks[10]; // 9 is "->"
             }
 
