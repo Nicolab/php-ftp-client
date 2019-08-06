@@ -401,6 +401,12 @@ class FtpClient implements Countable
 
             // remove children
             foreach ($files as $file) {
+                // skip removing if "file" is pseudo directory like . or ..
+                $items = explode('/', $file);
+                if (in_array(end($items), ['.', '..'])) {
+                    continue;
+                }
+
                 $this->remove($file, true);
             }
         }
