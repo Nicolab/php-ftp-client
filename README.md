@@ -1,3 +1,5 @@
+*Note: this package will not receive new features, and may only receive bug fixes from now on. If you're looking for an actively maintained alternative, you may want to check out [brick/ftp](https://github.com/brick/ftp).*
+
 # nicolab/php-ftp-client
 
 A flexible FTP and SSL-FTP client for PHP.
