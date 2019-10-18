@@ -445,6 +445,10 @@ class FtpClient implements Countable
      */
     public function remove($path, $recursive = false)
     {
+        if ($path == '.' || $path == '..') {
+            return false;
+        }
+
         try {
             if (@$this->ftp->delete($path)
             or ($this->isDir($path) and $this->rmdir($path, $recursive))) {
