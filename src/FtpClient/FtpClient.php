@@ -661,6 +661,7 @@ class FtpClient implements Countable
                 }
             }
         }
+	$d->colse();
 
         return $this;
     }
