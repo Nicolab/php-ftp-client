@@ -41,7 +41,7 @@ use \Countable;
  * @method bool set_option(int $option, mixed $value) Set miscellaneous runtime FTP options
  * @method bool site(string $command) Sends a SITE command to the server
  * @method int size(string $remote_file) Returns the size of the given file
- * @method string systype() systype() Returns the system type identifier of the remote FTP server
+ * @method string systype() Returns the system type identifier of the remote FTP server
  *
  * @author Nicolas Tallefourtane <dev@nicolab.net>
  */
