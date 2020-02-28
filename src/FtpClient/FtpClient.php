@@ -455,6 +455,14 @@ class FtpClient implements Countable
             if (@$this->ftp->delete($path)
             or ($this->isDir($path) and $this->rmdir($path, $recursive))) {
                 return true;
+            } else {
+                // in special cases the delete can fail (for example, at symfony's "r+e.gex[c]a(r)s" directory)
+                $newPath = preg_replace("/[^A-Za-z0-9\/]/", '', $path);
+                if ($this->rename($path, $newPath)) {
+                    if (@$this->ftp->delete($newPath) or ($this->isDir($newPath) and $this->rmdir($newPath, $recursive))) {
+                        return true;
+                    }
+                }
             }
 
             return false;
