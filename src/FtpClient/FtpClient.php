@@ -403,7 +403,7 @@ class FtpClient implements Countable
 
             // remove children
             foreach ($files as $file) {
-                $this->remove($directory.'/'.$file, true);
+                $this->remove($file, true);
             }
         }
 
