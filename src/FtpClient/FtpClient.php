@@ -355,7 +355,7 @@ class FtpClient implements Countable
      *
      * @param  string $directory The directory
      * @param  bool   $recursive
-     * @return array
+     * @return bool
      */
     public function mkdir($directory, $recursive = false)
     {
