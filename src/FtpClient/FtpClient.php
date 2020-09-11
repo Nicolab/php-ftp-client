@@ -301,18 +301,10 @@ class FtpClient implements Countable
         }
 
         // utils for recursion
-        $flatten = static function (array $arr) use (&$flatten) {
-            $flat = [];
-
-            foreach ($arr as $k => $v) {
-                if (is_array($v)) {
-                    $flat = array_merge($flat, $flatten($v));
-                } else {
-                    $flat[] = $v;
-                }
-            }
-
-            return $flat;
+        $flatten = static function (array $array) {
+	        $result = [];
+	        array_walk_recursive($array, static function($a) use (&$result) { $result[] = $a; });
+	        return $result;
         };
 
         foreach ($files as $file) {
@@ -765,7 +757,6 @@ class FtpClient implements Countable
                         $path .= ' '.$chunks[$i];
                     }
                 }
-
 
                 if (strpos($path, './') === 0) {
                     $path = substr($path, 2);
