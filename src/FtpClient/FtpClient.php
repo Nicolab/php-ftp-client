@@ -661,7 +661,7 @@ class FtpClient implements Countable
             }
         }
 
-		$d->close();
+        $d->close();
 
         return $this;
     }
@@ -695,7 +695,7 @@ class FtpClient implements Countable
         foreach ($contents as $file) { 
             if ($file === '.' || $file === '..') {
                 continue;
-	        }
+            }
 
             $this->ftp->get($target_directory."/".$file, $file, $mode);
         }
