@@ -12,6 +12,8 @@
 namespace FtpClient;
 
 use \Countable;
+use DateTime;
+use FtpClient\Objects\ListingRow;
 
 /**
  * The FTP and SSL-FTP client for PHP.
@@ -741,28 +743,20 @@ class FtpClient implements Countable
         if (false == $recursive) {
             foreach ($list as $path => $item) {
                 $chunks = preg_split("/\s+/", $item);
+                $listItems = $this->makeListingRow($chunks);
 
                 // if not "name"
-                if (empty($chunks[8]) || $chunks[8] == '.' || $chunks[8] == '..') {
+                if (empty($listItems->name) || $listItems->name == '.' || $listItems->name == '..') {
                     continue;
                 }
 
-                $path = $directory.'/'.$chunks[8];
-
-                if (isset($chunks[9])) {
-                    $nbChunks = count($chunks);
-
-                    for ($i = 9; $i < $nbChunks; $i++) {
-                        $path .= ' '.$chunks[$i];
-                    }
-                }
-
+                $path = $directory.'/'.$listItems->name;
 
                 if (substr($path, 0, 2) == './') {
                     $path = substr($path, 2);
                 }
 
-                $items[ $this->rawToType($item).'#'.$path ] = $item;
+                $items[$listItems->type.'#'.$path ] = $item;
             }
 
             return $items;
@@ -786,27 +780,20 @@ class FtpClient implements Countable
             }
 
             $chunks = preg_split("/\s+/", $item);
+            $listItems = $this->makeListingRow($chunks);
 
             // if not "name"
-            if (empty($chunks[8]) || $chunks[8] == '.' || $chunks[8] == '..') {
+            if (empty($listItems->name) || $listItems->name == '.' || $listItems->name == '..') {
                 continue;
             }
 
-            $path = $directory.'/'.$chunks[8];
-
-            if (isset($chunks[9])) {
-                $nbChunks = count($chunks);
-
-                for ($i = 9; $i < $nbChunks; $i++) {
-                    $path .= ' '.$chunks[$i];
-                }
-            }
+            $path = $directory.'/'.$listItems->name;
 
             if (substr($path, 0, 2) == './') {
                 $path = substr($path, 2);
             }
 
-            $items[$this->rawToType($item).'#'.$path] = $item;
+            $items[$listItems->type.'#'.$path] = $item;
 
             if ($item[0] == 'd') {
                 $sublist = $this->rawlist($path, true);
@@ -835,60 +822,40 @@ class FtpClient implements Countable
         $path  = '';
 
         foreach ($rawlist as $key => $child) {
-            $chunks = preg_split("/\s+/", $child, 9);
+        	$chunks = preg_split("/\s+/", $child, 9);
+        	
+        	if (count($chunks) === 1) {
+        		$len = strlen($chunks[0]);
+        		
+        		if ($len && $chunks[0][$len-1] == ':') {
+        			$path = substr($chunks[0], 0, -1);
+        		}
+        		
+        		continue;
+        	}
+        	
+        	$listItems = $this->makeListingRow($chunks);
 
-            if (isset($chunks[8]) && ($chunks[8] == '.' or $chunks[8] == '..')) {
+            if (isset($listItems->name) && ($listItems->name == '.' or $listItems->name == '..')) {
                 continue;
-            }
-
-            if (count($chunks) === 1) {
-                $len = strlen($chunks[0]);
-
-                if ($len && $chunks[0][$len-1] == ':') {
-                    $path = substr($chunks[0], 0, -1);
-                }
-
-                continue;
-            }
-
-            // Prepare for filename that has space
-            $nameSlices = array_slice($chunks, 8, true);
-
-            $item = [
-                'permissions' => $chunks[0],
-                'number'      => $chunks[1],
-                'owner'       => $chunks[2],
-                'group'       => $chunks[3],
-                'size'        => $chunks[4],
-                'month'       => $chunks[5],
-                'day'         => $chunks[6],
-                'time'        => $chunks[7],
-                'name'        => implode(' ', $nameSlices),
-                'type'        => $this->rawToType($chunks[0]),
-            ];
-
-            if ($item['type'] == 'link' && isset($chunks[10])) {
-                $item['target'] = $chunks[10]; // 9 is "->"
             }
 
             // if the key is not the path, behavior of ftp_rawlist() PHP function
-            if (is_int($key) || false === strpos($key, $item['name'])) {
+            if (is_int($key) || false === strpos($key, $listItems->name)) {
                 array_splice($chunks, 0, 8);
 
-                $key = $item['type'].'#'
-                    .($path ? $path.'/' : '')
-                    .implode(' ', $chunks);
+                $key = $listItems->type . '#' . ($path ? $path.'/' : '') . implode(' ', $chunks);
 
-                if ($item['type'] == 'link') {
+                if ($listItems->type == 'link') {
                     // get the first part of 'link#the-link.ext -> /path/of/the/source.ext'
                     $exp = explode(' ->', $key);
                     $key = rtrim($exp[0]);
                 }
 
-                $items[$key] = $item;
+                $items[$key] = (array)$listItems;
             } else {
                 // the key is the path, behavior of FtpClient::rawlist() method()
-                $items[$key] = $item;
+            	$items[$key] = (array)$listItems;
             }
         }
 
@@ -942,4 +909,67 @@ class FtpClient implements Countable
 
         return $this;
     }
+    
+    protected function makeListingRow(array $listChunks) {
+    	
+    	// Windows has date first, Linux has permissions first
+    	$isWin = preg_match('/\\d/', $listChunks[0]) > 0;
+    	
+    	return $isWin ? $this->makeWindowsListingRow($listChunks) : $this->makeLinuxListingRow($listChunks);
+    }
+    
+    private function makeWindowsListingRow(array $listChunks) {
+    	/*
+    	 * Windows:
+    	 * 09-15-20  02:00PM                  <DIR> vendor
+    	 * 09-15-20  02:00PM                  243 myfile.txt
+    	 * 09-15-20  02:00PM                  243 my file.txt
+    	 */
+    	
+    	$dateTime = DateTime::createFromFormat('m-d-y h:iA', $listChunks[0] . ' ' . $listChunks[1]);
+    	
+    	$listingRow = new ListingRow();
+    	
+    	$listingRow->size	= $listChunks[2] === '<DIR>' ? null : $listChunks[2];
+    	$listingRow->month	= $dateTime->format('M');
+    	$listingRow->day	= $dateTime->format('d');
+    	$listingRow->time	= $dateTime->format('H:i');
+    	$listingRow->name	= implode(' ', array_slice($listChunks, 3));
+    	$listingRow->type	= $listChunks[2] === '<DIR>' ? 'directory' : 'file';
+    	$listingRow->target	= null;
+    	
+    	return $listingRow;
+    }
+    
+    private function makeLinuxListingRow(array $listChunks) {
+    	/*
+    	 * Linux:
+    	 * drwxrwxr-x 10 myuser mygroup  4096 Sep 15 15:18 vendor
+    	 * drwxrwxr-x 10 myuser mygroup  4096 Sep 15 15:18 myfile.txt
+    	 * drwxrwxr-x 10 myuser mygroup  4096 Sep 15 15:18 my file.txt
+    	 */
+    	
+    	$listingRow = new ListingRow();
+    	
+    	$listingRow->permissions	= $listChunks[0];
+    	$listingRow->number			= $listChunks[1];
+    	$listingRow->owner			= $listChunks[2];
+    	$listingRow->group			= $listChunks[3];
+    	$listingRow->size			= $listChunks[4];
+    	$listingRow->month			= $listChunks[5];
+    	$listingRow->day			= $listChunks[6];
+    	$listingRow->time			= $listChunks[7];
+    	$listingRow->name			= implode(' ', array_slice($listChunks, 8));
+    	$listingRow->type			= $this->rawToType($listChunks[0]);
+    	$listingRow->target			= null;
+    	
+    	if ($listingRow->type === 'link' && strpos($listingRow->name, '->') !== false) {
+    		$files = explode('->', $listingRow->name);
+    		$listingRow->name = $files[0];
+    		$listingRow->target = $files[1];
+    	}
+    	
+    	return $listingRow;
+    }
 }
+
