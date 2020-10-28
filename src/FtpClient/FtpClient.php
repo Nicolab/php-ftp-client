@@ -829,7 +829,7 @@ class FtpClient implements Countable
      * @param  array $rawlist
      * @return array
      */
-    public function parseRawList(array $rawlist)
+    protected function parseRawList(array $rawlist)
     {
         $items = array();
         $path  = '';
@@ -904,7 +904,7 @@ class FtpClient implements Countable
      * @return string The file type (file, directory, link, unknown)
      * @throws FtpException
      */
-    public function rawToType($permission)
+    protected function rawToType($permission)
     {
         if (!is_string($permission)) {
             throw new FtpException('The "$permission" argument must be a string, "'
