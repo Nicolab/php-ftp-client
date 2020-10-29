@@ -488,6 +488,26 @@ class FtpClient implements Countable
     }
 
     /**
+     * Check if the giving file is exists.
+     *
+     * @param string $remote_file
+     * @return bool
+     */
+    public function isFile($remote_file)
+    {
+        $files = $this->scanDir(dirname($remote_file));
+
+        foreach ($files as $name => $info) {
+            $pattern = '/file#'.str_replace('/', '\/', $remote_file).'/';
+            if (preg_match($pattern, $name)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Check if a directory is empty.
      *
      * @param  string $directory
@@ -720,7 +740,7 @@ class FtpClient implements Countable
     public function rawlist($directory = '.', $recursive = false)
     {
         if (!$this->isDir($directory)) {
-            throw new FtpException('"'.$directory.'" is not a directory.');
+            throw new FtpException("$directory is not a directory.");
         }
         
         if (strpos($directory, " ") > 0) {
