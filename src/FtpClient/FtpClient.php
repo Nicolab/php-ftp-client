@@ -49,6 +49,15 @@ use \Countable;
 class FtpClient implements Countable
 {
     /**
+     * FTP file types.
+     */
+    const FILE_TYPE   = 'file';
+    const DIR_TYPE    = 'directory';
+    const LINK_TYPE   = 'link';
+    const UKNOWN_TYPE = 'unknown';
+    const ANY_TYPE    = null;
+
+    /**
      * The connection with the server.
      *
      * @var resource
@@ -541,7 +550,7 @@ class FtpClient implements Countable
      * @param  bool        $recursive true by default
      * @return int
      */
-    public function count($directory = '.', $type = null, $recursive = true)
+    public function count($directory = '.', $type = self::ANY_TYPE, $recursive = true)
     {
         $items  = (null === $type ? $this->nlist($directory, $recursive)
             : $this->scanDir($directory, $recursive));

@@ -75,16 +75,16 @@ $total = $ftp->count();
 $total = $ftp->count('/path/of/directory');
 
 // count only the "files" in the current directory
-$total_file = $ftp->count('.', 'file');
+$total_file = $ftp->count('.', FtpClient::FILE_TYPE);
 
 // count only the "files" in a given directory
-$total_file = $ftp->count('/path/of/directory', 'file');
+$total_file = $ftp->count('/path/of/directory', FtpClient::FILE_TYPE);
 
 // count only the "directories" in a given directory
-$total_dir = $ftp->count('/path/of/directory', 'directory');
+$total_dir = $ftp->count('/path/of/directory', FtpClient::DIR_TYPE);
 
 // count only the "symbolic links" in a given directory
-$total_link = $ftp->count('/path/of/directory', 'link');
+$total_link = $ftp->count('/path/of/directory', FtpClient::LINK_TYPE);
 ```
 
 Detailed list of all files and directories :
