@@ -743,7 +743,7 @@ class FtpClient implements Countable
                 $chunks = preg_split("/\s+/", $item);
 
                 // if not "name"
-                if (empty($chunks[8]) || $chunks[8] == '.' || $chunks[8] == '..') {
+                if (strlen($chunks[8]) === 0 || $chunks[8] == '.' || $chunks[8] == '..') {
                     continue;
                 }
 
@@ -788,7 +788,7 @@ class FtpClient implements Countable
             $chunks = preg_split("/\s+/", $item);
 
             // if not "name"
-            if (empty($chunks[8]) || $chunks[8] == '.' || $chunks[8] == '..') {
+            if (strlen($chunks[8]) === 0 || $chunks[8] == '.' || $chunks[8] == '..') {
                 continue;
             }
 
