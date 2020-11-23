@@ -319,7 +319,7 @@ class FtpClient implements Countable
         };
 
         foreach ($files as $file) {
-            $file = $directory.'/'.$file;
+            //$file = $directory.'/'.$file;
 
             // if contains the root path (behavior of the recursivity)
             if (0 === strpos($file, $directory, $dir_len)) {
