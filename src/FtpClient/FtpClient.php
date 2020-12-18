@@ -678,21 +678,21 @@ class FtpClient implements Countable
      */
     public function getAll($source_directory, $target_directory, $mode = FTP_BINARY)
     {
-        if ($source_directory != ".") { 
-            if ($this->ftp->chdir($source_directory) == false) { 
+        if ($source_directory != ".") {
+            if ($this->ftp->chdir($source_directory) == false) {
                 throw new FtpException("Unable to change directory: ".$source_directory);
             }
 
-            if (!(is_dir($source_directory))) {
-                mkdir($source_directory);
+            if (!(is_dir($target_directory))) {
+                mkdir($target_directory);
 	    }
 
-            chdir($source_directory); 
-        } 
+            chdir($target_directory);
+        }
 
         $contents = $this->ftp->nlist(".");
 
-        foreach ($contents as $file) { 
+        foreach ($contents as $file) {
             if ($file == '.' || $file == '..') {
                 continue;
 	    }
@@ -700,8 +700,8 @@ class FtpClient implements Countable
             $this->ftp->get($target_directory."/".$file, $file, $mode);
         }
 
-        $this->ftp->chdir(".."); 
-        chdir(".."); 
+        $this->ftp->chdir("..");
+        chdir("..");
 
         return $this;
     }
@@ -722,7 +722,7 @@ class FtpClient implements Countable
         if (!$this->isDir($directory)) {
             throw new FtpException('"'.$directory.'" is not a directory.');
         }
-        
+
         if (strpos($directory, " ") > 0) {
             $ftproot = $this->ftp->pwd();
             $this->ftp->chdir($directory);
@@ -731,7 +731,7 @@ class FtpClient implements Countable
         } else {
             $list  = $this->ftp->rawlist($directory);
         }
-        
+
         $items = array();
 
         if (!$list) {
