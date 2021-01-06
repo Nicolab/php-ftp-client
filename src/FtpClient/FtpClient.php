@@ -17,7 +17,7 @@ use \Countable;
  * The FTP and SSL-FTP client for PHP.
  *
  * @method bool alloc(int $filesize, string &$result = null) Allocates space for a file to be uploaded
- * @method bool append(string $remote_file, string $local_file, int $mode) Append the contents of a file to another file on the FTP server
+ * @method bool append(string $remote_file, string $local_file, int $mode = FTP_BINARY) Append the contents of a file to another file on the FTP server
  * @method bool cdup() Changes to the parent directory
  * @method bool chdir(string $directory) Changes the current directory on a FTP server
  * @method int chmod(int $mode, string $filename) Set permissions on a file via FTP
