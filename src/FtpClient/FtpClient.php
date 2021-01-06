@@ -640,7 +640,6 @@ class FtpClient implements Countable
 
                 // do the following if it is a directory
                 if (is_dir($source_directory.'/'.$file)) {
-
                     if (!$this->isDir($target_directory.'/'.$file)) {
 
                         // create directories that do not yet exist
@@ -743,7 +742,7 @@ class FtpClient implements Countable
                 $chunks = preg_split("/\s+/", $item);
 
                 // if not "name"
-                if (strlen($chunks[8]) === 0 || $chunks[8] == '.' || $chunks[8] == '..') {
+                if (!isset($chunks[8]) || strlen($chunks[8]) === 0 || $chunks[8] == '.' || $chunks[8] == '..') {
                     continue;
                 }
 
@@ -788,7 +787,7 @@ class FtpClient implements Countable
             $chunks = preg_split("/\s+/", $item);
 
             // if not "name"
-            if (strlen($chunks[8]) === 0 || $chunks[8] == '.' || $chunks[8] == '..') {
+            if (!isset($chunks[8]) || strlen($chunks[8]) === 0 || $chunks[8] == '.' || $chunks[8] == '..') {
                 continue;
             }
 
