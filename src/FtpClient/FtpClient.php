@@ -568,7 +568,7 @@ class FtpClient implements Countable
     {
         $handle = fopen('php://temp', 'r+');
 
-        if ($this->fget($handle, $remote_file, $mode, $resumepos)) {
+        if ($this->ftp->fget($handle, $remote_file, $mode, $resumepos)) {
             rewind($handle);
             return stream_get_contents($handle);
         }
