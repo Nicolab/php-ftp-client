@@ -69,22 +69,24 @@ Count the items in a directory :
 
 ```php
 // count in the current directory
+$total = $ftp->countItems();
+// or alias
 $total = $ftp->count();
 
 // count in a given directory
-$total = $ftp->count('/path/of/directory');
+$total = $ftp->countItems('/path/of/directory');
 
 // count only the "files" in the current directory
-$total_file = $ftp->count('.', 'file');
+$total_file = $ftp->countItems('.', 'file');
 
 // count only the "files" in a given directory
-$total_file = $ftp->count('/path/of/directory', 'file');
+$total_file = $ftp->countItems('/path/of/directory', 'file');
 
 // count only the "directories" in a given directory
-$total_dir = $ftp->count('/path/of/directory', 'directory');
+$total_dir = $ftp->countItems('/path/of/directory', 'directory');
 
 // count only the "symbolic links" in a given directory
-$total_link = $ftp->count('/path/of/directory', 'link');
+$total_link = $ftp->countItems('/path/of/directory', 'link');
 ```
 
 Detailed list of all files and directories :

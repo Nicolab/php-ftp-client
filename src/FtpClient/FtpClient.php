@@ -453,15 +453,15 @@ class FtpClient implements Countable
 
         try {
             if (@$this->ftp->delete($path)
-            or ($this->isDir($path) 
+            or ($this->isDir($path)
             and $this->rmdir($path, $recursive))) {
                 return true;
             } else {
                 // in special cases the delete can fail (for example, at Symfony's "r+e.gex[c]a(r)s" directory)
                 $newPath = preg_replace('/[^A-Za-z0-9\/]/', '', $path);
                 if ($this->rename($path, $newPath)) {
-                    if (@$this->ftp->delete($newPath) 
-                    or ($this->isDir($newPath) 
+                    if (@$this->ftp->delete($newPath)
+                    or ($this->isDir($newPath)
                     and $this->rmdir($newPath, $recursive))) {
                         return true;
                     }
@@ -507,7 +507,7 @@ class FtpClient implements Countable
      */
     public function isEmpty($directory)
     {
-        return $this->count($directory, null, false) === 0 ? true : false;
+        return $this->countItems($directory, null, false) === 0 ? true : false;
     }
 
     /**
@@ -553,8 +553,7 @@ class FtpClient implements Countable
      * @param  bool        $recursive true by default
      * @return int
      */
-    #[\ReturnTypeWillChange]
-    public function count($directory = '.', $type = null, $recursive = true)
+    public function countItems($directory = '.', $type = null, $recursive = true)
     {
         $items  = (null === $type ? $this->nlist($directory, $recursive)
             : $this->scanDir($directory, $recursive));
@@ -567,6 +566,18 @@ class FtpClient implements Countable
         }
 
         return $count;
+    }
+
+    /**
+     * Count the items (file, directory, link, unknown).
+     * This method call `countItems()` with the default arguments.
+     *
+     * @see countItems
+     * @return int
+     */
+    public function count()
+    {
+        return $this->countItems();
     }
 
     /**
