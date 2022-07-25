@@ -447,7 +447,8 @@ class FtpClient implements Countable
      */
     public function remove($path, $recursive = false)
     {
-        if ($path == '.' || $path == '..') {
+	$basename = basename($path);
+        if ($basename == '.' || $basename == '..') {
             return false;
         }
 
