@@ -10,7 +10,7 @@ This lib provides helpers easy to use to manage the remote files.
 
   * Install package with composer
 ```
-composer require hugsbrugs/php-ftp
+composer require nicolab/php-ftp-client
 ```
 
   * Or use GIT clone command: 
