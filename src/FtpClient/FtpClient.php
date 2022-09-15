@@ -763,7 +763,7 @@ class FtpClient implements Countable
 
         if (false == $recursive) {
             foreach ($list as $path => $item) {
-                $chunks = preg_split("/\s+/", $item);
+                $chunks = preg_split("/\s+/", $item, 9);
 
                 // if not "name"
                 if (!isset($chunks[8]) || strlen($chunks[8]) === 0 || $chunks[8] == '.' || $chunks[8] == '..') {
