@@ -28,7 +28,7 @@ use \Countable;
  * @method mixed get_option(int $option) Retrieves various runtime behaviours of the current FTP stream
  * @method bool get(string $local_file, string $remote_file, int $mode, int $resumepos = 0) Downloads a file from the FTP server
  * @method int mdtm(string $remote_file) Returns the last modified time of the given file
- * @method array mlsd(string $remote_dir) Returns a list of files in the given directory
+ * @method array nlist($directory = '.', $recursive = false, $filter = 'sort') Returns a list of files in the given directory
  * @method int nb_continue() Continues retrieving/sending a file (non-blocking)
  * @method int nb_fget(resource $handle, string $remote_file, int $mode, int $resumepos = 0) Retrieves a file from the FTP server and writes it to an open file (non-blocking)
  * @method int nb_fput(string $remote_file, resource $handle, int $mode, int $startpos = 0) Stores a file from an open file to the FTP server (non-blocking)
