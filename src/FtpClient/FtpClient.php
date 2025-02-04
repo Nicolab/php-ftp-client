@@ -575,7 +575,7 @@ class FtpClient implements Countable
      * @see countItems
      * @return int
      */
-    public function count(): int
+    public function count()
     {
         return $this->countItems();
     }
